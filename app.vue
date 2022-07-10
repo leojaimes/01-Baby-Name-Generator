@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Gender, Popularity, Length, names, Name } from '@/data'
 
+
 interface OptionsState {
   gender: Gender;
   popularity: Popularity;
@@ -17,19 +18,19 @@ const options: OptionsState = reactive<OptionsState>(
   }
 )
 
-const selectednNames = ref<Name[]>([])
+const selectedNames = ref<Name[]>([])
 
 
 const computedSelectedNames = () => {
   const fitlerNames = names
-  .filter((name) => name.gender === options.gender)
-  .filter((name) => name.popularity = options.popularity)
-  .filter((name)=>{
-    if(options.length === Length.ALL) return true
-    else return name.length === options.length  
-  })
+    .filter((name) => name.gender === options.gender)
+    .filter((name) => name.popularity = options.popularity)
+    .filter((name) => {
+      if (options.length === Length.ALL) return true
+      else return name.length === options.length
+    })
 
-  selectednNames.value = fitlerNames
+  selectedNames.value = fitlerNames
 
 
 
@@ -90,10 +91,8 @@ const computedSelectedNames = () => {
         </button>
       </div>
     </div>
-
     <button class="primary" @click="computedSelectedNames">Find Names</button>
-
-    {{  selectednNames  }}
+    <CardName v-for="(name, index) in selectedNames" :index="1" :name="name.name" @remove="() => { }" />
   </div>
 </template>
 <style scoped>
