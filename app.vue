@@ -1,29 +1,10 @@
 <script setup lang="ts">
-let myName: string = "Latith"
-
-
-enum Gender {
-  GIRL = 'Girl',
-  BOY = 'Boy',
-  UNISEX = "Unisex"
-}
-
-enum Lenght {
-  LONG = 'Long',
-  ALL = 'All',
-  SHORT = "Short"
-}
-
-enum Popularity {
-  TRENDY = 'Trendy',
-  UNIQUE = 'Unique',
-
-}
+import { Gender, Popularity, Length, names, Name } from '@/data'
 
 interface OptionsState {
   gender: Gender;
   popularity: Popularity;
-  length: Lenght;
+  length: Length;
 }
 
 
@@ -31,12 +12,28 @@ interface OptionsState {
 const options: OptionsState = reactive<OptionsState>(
   {
     gender: Gender.GIRL,
-    length: Lenght.ALL,
+    length: Length.ALL,
     popularity: Popularity.UNIQUE,
   }
 )
 
+const selectednNames = ref<Name[]>([])
 
+
+const computedSelectedNames = () => {
+  const fitlerNames = names
+  .filter((name) => name.gender === options.gender)
+  .filter((name) => name.popularity = options.popularity)
+  .filter((name)=>{
+    if(options.length === Length.ALL) return true
+    else return name.length === options.length  
+  })
+
+  selectednNames.value = fitlerNames
+
+
+
+}
 
 </script>
 
@@ -49,13 +46,16 @@ const options: OptionsState = reactive<OptionsState>(
     <div class="option-container">
       <h4>1)Choose a Gender</h4>
       <div class="option-buttons">
-        <button class="option option-left" :class="options.gender === Gender.BOY && 'option-active'">
+        <button class="option option-left" :class="options.gender === Gender.BOY && 'option-active'"
+          @click="options.gender = Gender.BOY">
           {{ Gender.BOY }}
         </button>
-        <button class="option" :class="options.gender === Gender.UNISEX && 'option-active'">
+        <button class="option" :class="options.gender === Gender.UNISEX && 'option-active'"
+          @click="options.gender = Gender.UNISEX">
           {{ Gender.UNISEX }}
         </button>
-        <button class="option option-right" :class="options.gender === Gender.GIRL && 'option-active'">
+        <button class="option option-right" :class="options.gender === Gender.GIRL && 'option-active'"
+          @click="options.gender = Gender.GIRL">
           {{ Gender.GIRL }}
         </button>
       </div>
@@ -63,10 +63,12 @@ const options: OptionsState = reactive<OptionsState>(
     <div class="option-container">
       <h4>2)Choose the name's popularity</h4>
       <div class="option-buttons">
-        <button class="option option-left" :class="options.popularity === Popularity.TRENDY && 'option-active'">
+        <button class="option option-left" :class="options.popularity === Popularity.TRENDY && 'option-active'"
+          @click="options.popularity = Popularity.TRENDY">
           {{ Popularity.TRENDY }}
         </button>
-        <button class="option option-right" :class="options.popularity === Popularity.UNIQUE && 'option-active'">
+        <button class="option option-right" :class="options.popularity === Popularity.UNIQUE && 'option-active'"
+          @click="options.popularity = Popularity.UNIQUE">
           {{ Popularity.UNIQUE }}
         </button>
       </div>
@@ -74,17 +76,24 @@ const options: OptionsState = reactive<OptionsState>(
     <div class="option-container">
       <h4>3)Choose the name's length</h4>
       <div class="option-buttons">
-        <button class="option option-left" :class="options.length === Lenght.LONG && 'option-active'">
-          {{ Lenght.LONG }}
+        <button class="option option-left" :class="options.length === Length.LONG && 'option-active'"
+          @click="options.length = Length.LONG">
+          {{ Length.LONG }}
         </button>
-        <button class="option" :class="options.length === Lenght.ALL && 'option-active'">
-          {{ Lenght.ALL }}
+        <button class="option" :class="options.length === Length.ALL && 'option-active'"
+          @click="options.length = Length.ALL">
+          {{ Length.ALL }}
         </button>
-        <button class="option option-right" :class="options.length === Lenght.SHORT && 'option-active'">
-          {{ Lenght.SHORT }}
+        <button class="option option-right" :class="options.length === Length.SHORT && 'option-active'"
+          @click="options.length = Length.SHORT">
+          {{ Length.SHORT }}
         </button>
       </div>
     </div>
+
+    <button class="primary" @click="computedSelectedNames">Find Names</button>
+
+    {{  selectednNames  }}
   </div>
 </template>
 <style scoped>
